@@ -6,7 +6,10 @@ const renderDeskContainer = (title) => {
 }
 
 const renderTodos = (project) => {
-  const projectContainer = document.getElementById('project-container-main')
+  const projectContainerTodoWrap = document.querySelector('.project-container-todo-wrap')
+  while (projectContainerTodoWrap.firstChild) {
+    projectContainerTodoWrap.removeChild(projectContainerTodoWrap.firstChild)
+  }
   project.todoArray.forEach((element) => {
     const todoContainer = document.createElement('div')
     todoContainer.classList.add('todo-container')
@@ -19,12 +22,17 @@ const renderTodos = (project) => {
     todoDescrip.classList.add('todo-descrip')
     todoDescrip.textContent = element.todoDescrip
     todoContainer.appendChild(todoDescrip)
-    projectContainer.appendChild(todoContainer)
+    projectContainerTodoWrap.appendChild(todoContainer)
   })
-  const addTodoButton = document.createElement('button')
-  addTodoButton.classList.add('add-todo-btn')
-  addTodoButton.textContent = '+ task'
-  projectContainer.appendChild(addTodoButton)
+}
+
+const addTodo = (project) => {
+  const title = prompt('todo title?')
+  const descrip = prompt('todo description?')
+  const priority = prompt('priority? 1-9, with 9 being the highest')
+  console.log(project)
+  project.addTodo(title, descrip, priority)
+  renderTodos(project)
 }
 
 const renderProject = (project) => {
@@ -39,7 +47,15 @@ const renderProject = (project) => {
   while (projectContainer.firstChild) {
     projectContainer.removeChild(projectContainer.firstChild)
   }
+  const projectContainerTodoWrap = document.createElement('div')
+  projectContainerTodoWrap.classList.add('project-container-todo-wrap')
+  projectContainer.appendChild(projectContainerTodoWrap)
   renderTodos(project)
+  const addTodoButton = document.createElement('button')
+  addTodoButton.classList.add('add-todo-btn')
+  addTodoButton.textContent = '+ task'
+  addTodoButton.addEventListener('click', () => addTodo(project))
+  projectContainer.appendChild(addTodoButton)
 }
 
 const renderNav = (workspace) => {
@@ -56,11 +72,12 @@ const renderNav = (workspace) => {
   while (navBarTabWrap.firstChild) {
     navBarTabWrap.removeChild(navBarTabWrap.firstChild)
   }
-  const projectArray = Object.keys(workspace.projects)
-  projectArray.forEach((key) => {
+  const projectArray = Object.values(workspace.projects)
+  projectArray.forEach((value) => {
     const tab = document.createElement('div')
     tab.classList.add('project-tab')
-    tab.textContent = key
+    tab.textContent = value.projectTitle
+    tab.addEventListener('click', () => renderProject(value))
     navBarTabWrap.appendChild(tab)
   })
   if (document.querySelector('.add-project-btn') == null) {
@@ -74,7 +91,7 @@ const renderNav = (workspace) => {
 
 const plusProject = (workspace) => {
   const title = prompt('enter project name')
-  console.log(title)
+  if (title == null) return
   workspace.addProject(title)
   renderNav(workspace)
   renderProject(workspace.projects[title])

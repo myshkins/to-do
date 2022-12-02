@@ -55,6 +55,8 @@ h1 {
 }
 
 .todo-container {
+    display: flex;
+    flex-direction: column;
     background-color: var(--todo-bg-color);
     border-radius: 4px;
     padding: 1rem;
