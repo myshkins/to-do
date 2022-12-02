@@ -4,6 +4,7 @@ import {
   renderProject,
   renderDeskContainer,
   renderNav,
+  plusProject,
 } from './dom'
 import { workspace } from './projects'
 
@@ -19,4 +20,6 @@ desk.projects.main.addTodo('hello', 'This is a sample', 5)
 
 renderDeskContainer('Desk')
 renderNav(desk)
+const addProjectButton = document.querySelector('.add-project-btn')
+addProjectButton.addEventListener('click', () => { plusProject(desk) })
 renderProject(desk.projects.main)

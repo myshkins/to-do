@@ -42,6 +42,12 @@ const renderProject = (project) => {
   renderTodos(project)
 }
 
+const plusProject = (workspace) => {
+  const title = prompt('enter project name')
+  workspace.addProject(title)
+  renderProject(workspace.projects.title)
+}
+
 const renderNav = (workspace) => {
   if (document.querySelector('.nav-bar') == null) {
     const navBar = document.createElement('div')
@@ -63,13 +69,8 @@ const renderNav = (workspace) => {
   const addProjectButton = document.createElement('button')
   addProjectButton.classList.add('add-project-btn')
   addProjectButton.textContent = '+ project'
-  navBar.appendChild(addProjectButton)
-}
 
-const plusProject = (workspace) => {
-  const title = prompt('enter project name')
-  workspace.addProject(title)
-  renderProject(workspace.projects.title)
+  navBar.appendChild(addProjectButton)
 }
 
 export {
