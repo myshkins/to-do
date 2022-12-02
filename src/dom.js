@@ -6,7 +6,7 @@ const renderDeskContainer = (title) => {
 }
 
 const renderTodos = (project) => {
-  const projectContainer = document.getElementById(`project-container-${project.projectTitle}`)
+  const projectContainer = document.getElementById('project-container-main')
   project.todoArray.forEach((element) => {
     const todoContainer = document.createElement('div')
     todoContainer.classList.add('todo-container')
@@ -42,35 +42,42 @@ const renderProject = (project) => {
   renderTodos(project)
 }
 
-const plusProject = (workspace) => {
-  const title = prompt('enter project name')
-  workspace.addProject(title)
-  renderProject(workspace.projects.title)
-}
-
 const renderNav = (workspace) => {
   if (document.querySelector('.nav-bar') == null) {
     const navBar = document.createElement('div')
     navBar.classList.add('nav-bar')
+    const navBarTabWrap = document.createElement('div')
+    navBarTabWrap.classList.add('nav-bar-tab-wrap')
+    navBar.appendChild(navBarTabWrap)
     const desk = document.querySelector('.desk-container')
     desk.appendChild(navBar)
   }
-  const navBar = document.querySelector('.nav-bar')
-  while (navBar.firstChild) {
-    navBar.removeChild(navBar.firstChild)
+  const navBarTabWrap = document.querySelector('.nav-bar-tab-wrap')
+  while (navBarTabWrap.firstChild) {
+    navBarTabWrap.removeChild(navBarTabWrap.firstChild)
   }
   const projectArray = Object.keys(workspace.projects)
   projectArray.forEach((key) => {
     const tab = document.createElement('div')
     tab.classList.add('project-tab')
     tab.textContent = key
-    navBar.appendChild(tab)
+    navBarTabWrap.appendChild(tab)
   })
-  const addProjectButton = document.createElement('button')
-  addProjectButton.classList.add('add-project-btn')
-  addProjectButton.textContent = '+ project'
+  if (document.querySelector('.add-project-btn') == null) {
+    const addProjectButton = document.createElement('button')
+    addProjectButton.classList.add('add-project-btn')
+    addProjectButton.textContent = '+ project'
+    const navBar = document.querySelector('.nav-bar')
+    navBar.appendChild(addProjectButton)
+  }
+}
 
-  navBar.appendChild(addProjectButton)
+const plusProject = (workspace) => {
+  const title = prompt('enter project name')
+  console.log(title)
+  workspace.addProject(title)
+  renderNav(workspace)
+  renderProject(workspace.projects[title])
 }
 
 export {
