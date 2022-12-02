@@ -4,6 +4,10 @@
     --todo-bg-color: rgb(201, 176, 176);
 }
 
+.poop {
+    color: brown;
+}
+
 html {
     font-size: 10px;
 }
