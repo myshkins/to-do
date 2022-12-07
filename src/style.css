@@ -2,6 +2,11 @@
     --bg-color: rgb(255, 220, 104);
     --tab-bg-color: rgb(209, 144, 144);
     --todo-bg-color: rgb(201, 176, 176);
+    --tab-boder-color: grey;
+    --add-btn-bg-color: rgb(219, 210, 210);
+    --nav-bar-text-color: black;
+    --desk-bg-color: aqua;
+    --back-tab-bg-color: rgb(209, 194, 109);
 }
 
 .poop {
@@ -30,28 +35,130 @@ h1 {
 .desk-container {
     margin: 1rem;
     padding: 1rem;
-    background-color: aqua;
+    background-color: var(--desk-bg-color);
     border-radius: 4px;
     font-size: 2rem;
 }
 
-.nav-bar {
-    padding: 1rem 1rem 0 1rem;
-    display: flex;
-    flex-direction: row;
-}
 
-.nav-bar-tab-wrap {
-    display: flex;
-    flex-direction: row;
-}
+
+/* || nav bar styles  */
 
 .project-tab {
-    background-color: var(--tab-bg-color);
-    padding: .5rem;
-    border-radius: 4px;
+    list-style: none;
+    margin: 0;
 }
 
+.project-tab li {
+    float: left;
+    position: relative;
+}
+
+.project-tab a {
+    float: left;
+    padding: 10px 40px;
+    text-decoration: none;
+    
+    /* Default colors */ 
+    color: var(--nav-bar-text-color);
+    background: var(--back-tab-bg-color);
+    
+    /* Only round the top corners */
+    -webkit-border-top-left-radius: 15px;
+    -webkit-border-top-right-radius: 15px;
+    -moz-border-radius-topleft: 15px;
+    -moz-border-radius-topright: 15px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px; 
+}
+
+.project-tab .active {
+    /* Highest, active tab is on top */
+    z-index: 3;
+}
+.project-tab .active a { 
+    /* Colors when tab is active */
+    background: white; 
+    color: black; 
+}
+.project-tab li:before, .project-tab li:after, 
+.project-tab li a:before, .project-tab li a:after {
+    /* All pseudo elements are 
+       abs. positioned and on bottom */
+    position: absolute;
+    bottom: 0;
+}
+
+  /* Only the first, last, and active
+     project-tab need pseudo elements at all */
+.project-tab li:last-child:after,   .project-tab li:last-child a:after,
+.project-tab li:first-child:before, .project-tab li:first-child a:before,
+.project-tab .active:after,   .project-tab .active:before, 
+.project-tab .active a:after, .project-tab .active a:before {
+    content: "";
+}
+
+.project-tab .active:before, .project-tab .active:after {
+    background: white; 
+    
+    /* Squares below circles */
+    z-index: 1;
+}
+/* Squares */
+.project-tab li:before, .project-tab li:after {
+    background: #ddc385;
+    width: 10px;
+    height: 10px;
+}
+
+.project-tab li:before {
+    left: -10px;      
+}
+.project-tab li:after {
+    right: -10px;
+}
+
+/* Circles */
+.project-tab li a:after, .project-tab li a:before {
+    width: 20px; 
+    height: 20px;
+    /* Circles are circular */
+    -webkit-border-radius: 10px;
+    -moz-border-radius:    10px;
+    border-radius:         10px;
+    background: var(--desk-bg-color);
+    
+    /* Circles over squares */
+    z-index: 2;
+}
+.project-tab .active a:after, .project-tab .active a:before {
+    background: #ddc385;
+}
+/* First and last project-tab have different
+   outside color needs */
+.project-tab li:first-child.active a:before,
+.project-tab li:last-child.active a:after {
+    background: var(--desk-bg-color);
+}
+
+.project-tab li a:before {
+    left: -20px;
+}
+.project-tab li a:after {
+    right: -20px;
+}
+
+
+
+.group:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+
+
+/* project container styles  */
 .project-container {
     background-color: var(--tab-bg-color);
     border-radius: 4px;
@@ -69,4 +176,3 @@ h1 {
 .todo-descrip {
     font-size: 1.5rem;
 }
-

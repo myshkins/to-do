@@ -28,9 +28,9 @@ const renderTodos = (project) => {
 
 const addTodo = (project) => {
   const title = prompt('todo title?')
+  if (title == null) return
   const descrip = prompt('todo description?')
   const priority = prompt('priority? 1-9, with 9 being the highest')
-  console.log(project)
   project.addTodo(title, descrip, priority)
   renderTodos(project)
 }
@@ -62,30 +62,36 @@ const renderNav = (workspace) => {
   if (document.querySelector('.nav-bar') == null) {
     const navBar = document.createElement('div')
     navBar.classList.add('nav-bar')
-    const navBarTabWrap = document.createElement('div')
-    navBarTabWrap.classList.add('nav-bar-tab-wrap')
+    const navBarTabWrap = document.createElement('ul')
+    navBarTabWrap.classList.add('nav-bar-tab-wrap', 'group', 'project-tab')
     navBar.appendChild(navBarTabWrap)
     const desk = document.querySelector('.desk-container')
     desk.appendChild(navBar)
   }
   const navBarTabWrap = document.querySelector('.nav-bar-tab-wrap')
-  while (navBarTabWrap.firstChild) {
+  while (navBarTabWrap.childNodes.length > 1) {
     navBarTabWrap.removeChild(navBarTabWrap.firstChild)
   }
   const projectArray = Object.values(workspace.projects)
+  projectArray.reverse()
   projectArray.forEach((value) => {
-    const tab = document.createElement('div')
+    const tab = document.createElement('li')
     tab.classList.add('project-tab')
-    tab.textContent = value.projectTitle
-    tab.addEventListener('click', () => renderProject(value))
-    navBarTabWrap.appendChild(tab)
+    const tabAnchor = document.createElement('a')
+    tab.appendChild(tabAnchor)
+    tabAnchor.textContent = value.projectTitle
+    tabAnchor.classList.add()
+    tabAnchor.addEventListener('click', () => renderProject(value))
+    navBarTabWrap.prepend(tab)
   })
   if (document.querySelector('.add-project-btn') == null) {
-    const addProjectButton = document.createElement('button')
-    addProjectButton.classList.add('add-project-btn')
-    addProjectButton.textContent = '+ project'
-    const navBar = document.querySelector('.nav-bar')
-    navBar.appendChild(addProjectButton)
+    const addProjectButton = document.createElement('li')
+    addProjectButton.classList.add('project-tab', 'add-project-btn')
+    const addProjectButtonAnchor = document.createElement('a')
+    addProjectButton.appendChild(addProjectButtonAnchor)
+    addProjectButtonAnchor.textContent = '+ project'
+    navBarTabWrap.removeChild(navBarTabWrap.firstChild)
+    navBarTabWrap.appendChild(addProjectButton)
   }
 }
 
