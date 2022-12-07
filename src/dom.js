@@ -35,7 +35,15 @@ const addTodo = (project) => {
   renderTodos(project)
 }
 
+function switchActiveTab(projectName) {
+  const activeTab = document.querySelector('.active')
+  activeTab.classList.remove('active')
+  const newActiveTab = document.getElementById(`project-tab-${projectName}`)
+  newActiveTab.classList.add('active')
+}
+
 const renderProject = (project) => {
+  switchActiveTab(project.projectTitle)
   const desk = document.querySelector('.desk-container')
   if (document.querySelector('.project-container') == null) {
     const projectContainer = document.createElement('div')
@@ -53,12 +61,12 @@ const renderProject = (project) => {
   renderTodos(project)
   const addTodoButton = document.createElement('button')
   addTodoButton.classList.add('add-todo-btn')
-  addTodoButton.textContent = '+ task'
+  addTodoButton.textContent = '+ todo'
   addTodoButton.addEventListener('click', () => addTodo(project))
   projectContainer.appendChild(addTodoButton)
 }
 
-const renderNav = (workspace) => {
+function createNavBar() {
   if (document.querySelector('.nav-bar') == null) {
     const navBar = document.createElement('div')
     navBar.classList.add('nav-bar')
@@ -68,6 +76,22 @@ const renderNav = (workspace) => {
     const desk = document.querySelector('.desk-container')
     desk.appendChild(navBar)
   }
+}
+
+function createAddProjectBtn() {
+  const navBarTabWrap = document.querySelector('.nav-bar-tab-wrap')
+  if (document.querySelector('.add-project-btn') == null) {
+    const addProjectButton = document.createElement('li')
+    addProjectButton.classList.add('project-tab', 'add-project-btn')
+    const addProjectButtonAnchor = document.createElement('a')
+    addProjectButton.appendChild(addProjectButtonAnchor)
+    addProjectButtonAnchor.textContent = '+'
+    navBarTabWrap.appendChild(addProjectButton)
+  }
+}
+
+const renderNav = (workspace, title) => {
+  createNavBar()
   const navBarTabWrap = document.querySelector('.nav-bar-tab-wrap')
   while (navBarTabWrap.childNodes.length > 1) {
     navBarTabWrap.removeChild(navBarTabWrap.firstChild)
@@ -77,6 +101,7 @@ const renderNav = (workspace) => {
   projectArray.forEach((value) => {
     const tab = document.createElement('li')
     tab.classList.add('project-tab')
+    tab.id = `project-tab-${value.projectTitle}`
     const tabAnchor = document.createElement('a')
     tab.appendChild(tabAnchor)
     tabAnchor.textContent = value.projectTitle
@@ -84,22 +109,16 @@ const renderNav = (workspace) => {
     tabAnchor.addEventListener('click', () => renderProject(value))
     navBarTabWrap.prepend(tab)
   })
-  if (document.querySelector('.add-project-btn') == null) {
-    const addProjectButton = document.createElement('li')
-    addProjectButton.classList.add('project-tab', 'add-project-btn')
-    const addProjectButtonAnchor = document.createElement('a')
-    addProjectButton.appendChild(addProjectButtonAnchor)
-    addProjectButtonAnchor.textContent = '+ project'
-    navBarTabWrap.removeChild(navBarTabWrap.firstChild)
-    navBarTabWrap.appendChild(addProjectButton)
-  }
+  const activeTab = document.getElementById(`project-tab-${title}`)
+  activeTab.classList.add('active')
+  createAddProjectBtn()
 }
 
 const plusProject = (workspace) => {
   const title = prompt('enter project name')
   if (title == null) return
   workspace.addProject(title)
-  renderNav(workspace)
+  renderNav(workspace, title)
   renderProject(workspace.projects[title])
 }
 

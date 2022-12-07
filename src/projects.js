@@ -9,14 +9,18 @@ const todo = (title, description, priority) => {
 }
 
 const project = (title) => {
-  const projectTitle = title
+  let projectTitle = title
   const todoArray = []
+  const editTitle = (newTitle) => {
+    projectTitle = newTitle
+  }
   const addTodo = (tdTitle, tdDescription, tdPriority) => {
     const newTodo = todo(tdTitle, tdDescription, tdPriority)
     todoArray.push(newTodo)
   }
   return {
     addTodo,
+    editTitle,
     projectTitle,
     todoArray,
   }
