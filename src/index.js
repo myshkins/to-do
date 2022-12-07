@@ -1,5 +1,6 @@
 import './style.css'
 import {
+  addProjectFieldTab,
   renderProject,
   renderDeskContainer,
   renderNav,
@@ -16,6 +17,6 @@ renderNav(desk, desk.projects.main.projectTitle)
 renderProject(desk.projects.main)
 
 const addProjectButtonAnchor = document.querySelector('.add-project-btn a')
-addProjectButtonAnchor.addEventListener('click', () => { plusProject(desk) })
+addProjectButtonAnchor.addEventListener('click', () => { addProjectFieldTab(desk) })
 const mainTab = document.querySelector('.nav-bar-tab-wrap').firstChild
 mainTab.classList.add('active')

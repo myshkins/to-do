@@ -5,12 +5,12 @@ const renderDeskContainer = (title) => {
   document.body.appendChild(deskContainer)
 }
 
-const renderTodos = (project) => {
+const renderTodos = (proj) => {
   const projectContainerTodoWrap = document.querySelector('.project-container-todo-wrap')
   while (projectContainerTodoWrap.firstChild) {
     projectContainerTodoWrap.removeChild(projectContainerTodoWrap.firstChild)
   }
-  project.todoArray.forEach((element) => {
+  proj.todoArray.forEach((element) => {
     const todoContainer = document.createElement('div')
     todoContainer.classList.add('todo-container')
     todoContainer.id = `todo-container-${element.todoTitle}`
@@ -26,43 +26,61 @@ const renderTodos = (project) => {
   })
 }
 
-const addTodo = (project) => {
+const addTodo = (proj) => {
   const title = prompt('todo title?')
   if (title == null) return
   const descrip = prompt('todo description?')
   const priority = prompt('priority? 1-9, with 9 being the highest')
-  project.addTodo(title, descrip, priority)
-  renderTodos(project)
+  proj.addTodo(title, descrip, priority)
+  renderTodos(proj)
+}
+
+function removeActiveTab() {
+  const activeTab = document.querySelector('.active')
+  activeTab.classList.remove('active')
 }
 
 function switchActiveTab(projectName) {
-  const activeTab = document.querySelector('.active')
-  activeTab.classList.remove('active')
+  removeActiveTab()
   const newActiveTab = document.getElementById(`project-tab-${projectName}`)
   newActiveTab.classList.add('active')
 }
 
-const renderProject = (project) => {
-  switchActiveTab(project.projectTitle)
-  const desk = document.querySelector('.desk-container')
-  if (document.querySelector('.project-container') == null) {
-    const projectContainer = document.createElement('div')
-    projectContainer.classList.add('project-container')
-    projectContainer.id = `project-container-${project.projectTitle}`
-    desk.appendChild(projectContainer)
-  }
+function clearTodos() {
   const projectContainer = document.querySelector('.project-container')
   while (projectContainer.firstChild) {
     projectContainer.removeChild(projectContainer.firstChild)
   }
+  return projectContainer
+}
+
+const createTodoWrap = (projectContainer) => {
   const projectContainerTodoWrap = document.createElement('div')
   projectContainerTodoWrap.classList.add('project-container-todo-wrap')
   projectContainer.appendChild(projectContainerTodoWrap)
-  renderTodos(project)
+}
+
+const createTodoButton = (proj) => {
   const addTodoButton = document.createElement('button')
   addTodoButton.classList.add('add-todo-btn')
   addTodoButton.textContent = '+ todo'
-  addTodoButton.addEventListener('click', () => addTodo(project))
+  addTodoButton.addEventListener('click', () => addTodo(proj))
+  return addTodoButton
+}
+
+const renderProject = (proj) => {
+  switchActiveTab(proj.projectTitle)
+  const desk = document.querySelector('.desk-container')
+  if (document.querySelector('.project-container') == null) {
+    const projectContainer = document.createElement('div')
+    projectContainer.classList.add('project-container')
+    projectContainer.id = `project-container-${proj.projectTitle}`
+    desk.appendChild(projectContainer)
+  }
+  const projectContainer = clearTodos()
+  createTodoWrap(projectContainer)
+  renderTodos(proj)
+  const addTodoButton = createTodoButton(proj)
   projectContainer.appendChild(addTodoButton)
 }
 
@@ -90,13 +108,14 @@ function createAddProjectBtn() {
   }
 }
 
-const renderNav = (workspace, title) => {
+const renderNav = (workspace, title, extra) => {
   createNavBar()
   const navBarTabWrap = document.querySelector('.nav-bar-tab-wrap')
   while (navBarTabWrap.childNodes.length > 1) {
     navBarTabWrap.removeChild(navBarTabWrap.firstChild)
   }
   const projectArray = Object.values(workspace.projects)
+  if (extra) projectArray.push(extra)
   projectArray.reverse()
   projectArray.forEach((value) => {
     const tab = document.createElement('li')
@@ -109,20 +128,37 @@ const renderNav = (workspace, title) => {
     tabAnchor.addEventListener('click', () => renderProject(value))
     navBarTabWrap.prepend(tab)
   })
-  const activeTab = document.getElementById(`project-tab-${title}`)
-  activeTab.classList.add('active')
+  if (extra) {
+    const activeTab = document.getElementById('proj-title-field')
+    activeTab.classList.add('active')
+  } else {
+    const activeTab = document.getElementById(`project-tab-${title}`)
+    activeTab.classList.add('active')
+  }
   createAddProjectBtn()
 }
 
-const plusProject = (workspace) => {
-  const title = prompt('enter project name')
-  if (title == null) return
+// for creating an entry field when creating a new project
+const addProjectFieldTab = (workspace) => {
+  const projectTitleField = document.createElement('li')
+  projectTitleField.id = 'proj-title-field'
+  const input = document.createElement('input')
+  input.addEventListener('focusout', () => {
+    const title = input.textContent
+    plusProject(workspace, title)
+  })
+  projectTitleField.appendChild(input)
+  renderNav(workspace, null, projectTitleField)
+}
+
+const plusProject = (workspace, title) => {
   workspace.addProject(title)
   renderNav(workspace, title)
   renderProject(workspace.projects[title])
 }
 
 export {
+  addProjectFieldTab,
   plusProject,
   renderProject,
   renderDeskContainer,
